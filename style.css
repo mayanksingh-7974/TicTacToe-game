@@ -1,0 +1,21 @@
+.col{
+    background-color :rgb(8, 90, 90);
+    width:70px;
+    height:70px;
+    border: 2px solid black;
+    justify-content:center;
+    display:flex;
+    align-items: center;
+    font-size: 30px;
+    cursor:pointer;
+}
+.row{
+    display:flex;
+}
+body{
+    justify-content:center;
+      display:flex;
+    align-items: center;
+  border: 10 px solid black;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+}
