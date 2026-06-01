@@ -1,32 +1,92 @@
-let currentPlayer = "X";
-let arr =Array(9).fill(null);
+// let box = document.getElementByClassName(".box");
+// let hoverd = ("click")=>{
+//     console.log("color changed");
+// }
+let boxes = document.querySelectorAll(".box");
 
-function checkWinner(){
-    if(
-        (arr[0] !==null && arr[0] == arr[1] && arr[1] == arr[2]) ||
-        (arr[3] !==null && arr[3] == arr[4] && arr[4] == arr[5]) ||
-        (arr[6] !==null && arr[6] == arr[7] && arr[7] == arr[8]) ||
-        (arr[0] !==null && arr[0] == arr[3] && arr[3] == arr[6]) ||
-        (arr[1] !==null && arr[1] == arr[4] && arr[4] == arr[7]) ||
-        (arr[2] !==null && arr[2] == arr[5] && arr[5] == arr[8]) ||
-        (arr[0] !==null && arr[0] == arr[4] && arr[4] == arr[8]) ||
-        (arr[2] !==null && arr[2] == arr[4] && arr[4] == arr[6]) 
-    )
-    {
-document.write(`winner is ${currentPlayer}`)  
-return;
-}
-if(!arr.some((e) => e === null)){
-    document.write(`Draw!!`)  
-return;
-}
-}
-function handleClick(el){
-    const id = Number(el.id); //convert to number as we want to represent array index in number
-    if(arr[id] != null) return;
-arr[id] = currentPlayer;
-el.innerText = currentPlayer;
-checkWinner();
+boxes.forEach((box) => {
+    box.addEventListener("click", () => {
+        box.classList.add("clicked");
+    });
+}); 
+let resetBtn = document.querySelector("#reset");
+const winPatterns =[
+    [0, 1, 2],
+    [0, 3, 6],
+    [0, 4, 8],
+    [1, 4, 7],
+    [2, 5, 8],
+    [2, 4, 6],
+    [3, 4, 5],
+    [6, 7, 8],
+]
+let turno = true;
+let cliko = boxes.forEach((box)=>{
+    box.addEventListener("click",()=>{
+        if(turno){
+            box.innerText ="X";
+            turno = false;
+        }
+        else{
+          box.innerText ="O";
+            turno = true;  
+        }
+        box.disabled = true;
+        checkWinner();
+        
+    })
+})
+const checkWinner = ()=>{
+    for(let pattern of winPatterns){
+        // console.log(pattern[0],pattern[1],pattern[2]);
 
-currentPlayer = currentPlayer === "X" ? "0"  : "X"; //if true  =0 else X
+       let pos1 =   boxes[pattern[0]].innerText;
+        let pos2 = boxes[pattern[1]].innerText;
+        let pos3 = boxes[pattern[2]].innerText;
+
+        if(pos1 != "" && pos2 != "" && pos3 != "" ){
+            if(pos1 === pos2 && pos2 === pos3){
+
+boxes[pattern[0]].classList.add("winner2");
+boxes[pattern[1]].classList.add("winner2");
+boxes[pattern[2]].classList.add("winner2");
+
+                showWinner(pos1);
+            }
+        }
+    }
 }
+let newGameBtn = document.querySelector("#newGame");
+let msgCon= document.querySelector(".msg-container");
+// let msgCon2= document.querySelector(".winner2");
+let msg = document.querySelector("#msg");
+const showWinner = (winner) =>{
+msg.innerText = `Congrats, the winner is ${winner}`;
+// msgCon2.classList.add("winner2");
+msgCon.classList.remove("hide");
+disableBox();
+
+}
+ 
+const disableBox = ()=>{
+    for(let box of boxes){
+        box.disabled = true;
+    }
+}
+const enableBox = ()=>{
+     for(let box of boxes){
+        box.disabled = false;
+        box.innerText = "";
+        box.classList.remove("clicked");
+
+        box.classList.remove("winner2");
+    }
+}
+const resetGame = ()=>{
+turno = true;
+enableBox();
+msgCon.classList.add("hide");
+
+}
+newGameBtn.addEventListener("click" , resetGame);
+resetBtn.addEventListener("click" , resetGame);
